@@ -385,6 +385,12 @@ Route::group(['prefix'=>'admin', 'middleware'=>['admin.auth', 'xss.sanitizer', '
 	Route::get('/roles/delete/{role_id}', $AdRolesCont.'@delete')->name('admin-role-delete');
 	Route::get('/roles/rolesAsSelect2/{type?}', $AdRolesCont.'@rolesAsSelect2')->name('admin-role-bulk-assign-view');
 
+	$AdJobTagsCont = 'App\Http\Controllers\Admin\JobTagsController';
+	Route::get('/job-tags', $AdJobTagsCont.'@listView')->name('admin-job-tags-list');
+	Route::get('/job-tags/create-or-edit', $AdJobTagsCont.'@createOrEdit')->name('admin-job-tags-create');
+	Route::post('/job-tags/save', $AdJobTagsCont.'@saveJobTags')->name('admin-job-tags-save');
+	Route::get('/job-tags/create-or-edit/{user_id?}', $AdJobTagsCont.'@createOrEdit')->name('admin-job-tags-edit');
+	Route::get('/job-tags/delete/{id}', $AdJobTagsCont.'@delete')->name('admin-job-tags-delete');
 	//Admin Roles module routes
 	$AdMenusCont = 'App\Http\Controllers\Admin\MenusController';
 	Route::get('/menus', $AdMenusCont.'@listView')->name('admin-menus-list');

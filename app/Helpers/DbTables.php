@@ -2258,6 +2258,8 @@ class DbTables
             array('category' => 'Jobs', 'title' => 'Create Jobs', 'slug' => 'create_jobs',),
             array('category' => 'Jobs', 'title' => 'Edit Jobs', 'slug' => 'edit_jobs',),
             array('category' => 'Jobs', 'title' => 'Delete Jobs', 'slug' => 'delete_jobs',),
+            //Job Tags
+            array('category' => 'Job Tag', 'title' => 'View Job Tag', 'slug' => 'view_job_tag',),
             //Job Filters
             array('category' => 'Job Filters', 'title' => 'View Job Filters', 'slug' => 'view_job_filters',),
             array('category' => 'Job Filters', 'title' => 'Create Job Filters', 'slug' => 'create_job_filters',),
