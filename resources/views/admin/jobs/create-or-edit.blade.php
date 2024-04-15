@@ -158,6 +158,17 @@
                                         <div class="col-md-12">
                                             <hr />
                                             <div class="form-group">
+                                                <label>{{ __('message.job_tag') }}</label>
+                                                <select class="form-control select2" id="jobTags[]" name="jobTags[]" multiple="multiple">
+                                                @foreach($jobTags as $jobTags)
+                                                <option value="{{$jobTags['id']}}">{{$jobTags['name']}}</option>
+                                                @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <hr />
+                                            <div class="form-group">
                                                 <label>{{ __('message.quizes') }}</label>
                                                 <select class="form-control select2" id="quizes[]" name="quizes[]" multiple="multiple">
                                                 @foreach ($quizes as $key => $value)

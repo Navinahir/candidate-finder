@@ -1,4 +1,4 @@
-function Role() {
+function JobTags() {
 
     "use strict";
 
@@ -93,11 +93,11 @@ function Role() {
 }
 
 $(document).ready(function() {
-    var role = new Role();
-    role.initRolesDropDown();
-    role.initSelectRoleForEdit();
-    role.initRoleCreateForm();
-    role.initJobTagsDelete();
-    role.initDualListBox();
-    role.loadPermissions();
+    var jobTags = new JobTags();
+    jobTags.initRolesDropDown();
+    jobTags.initSelectRoleForEdit();
+    jobTags.initRoleCreateForm();
+    jobTags.initJobTagsDelete();
+    jobTags.initDualListBox();
+    jobTags.loadPermissions();
 });
