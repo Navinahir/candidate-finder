@@ -160,8 +160,9 @@
                                             <div class="form-group">
                                                 <label>{{ __('message.job_tag') }}</label>
                                                 <select class="form-control select2" id="jobTags[]" name="jobTags[]" multiple="multiple">
-                                                @foreach($jobTags as $jobTags)
-                                                <option value="{{$jobTags['id']}}">{{$jobTags['name']}}</option>
+                                                @foreach($job_tags as $jobTags)
+                                                @php $jobTagsData = $job['jobTags'] ? explode(',', $job['jobTags']) : array(); @endphp
+                                                <option value="{{ encode($jobTags['id']) }}" {{ sel($jobTags['id'], $jobTagsData) }}>{{$jobTags['name']}}</option>
                                                 @endforeach
                                                 </select>
                                             </div>

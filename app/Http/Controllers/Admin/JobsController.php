@@ -62,7 +62,7 @@ class JobsController extends Controller
         $data['quizes'] = objToArr(Quiz::getAll(true));
         $data['job_filters'] = objToArr(JobFilter::getAll());
         $data['employers'] = objToArr(Employer::getAll2());
-        $data['jobTags'] = JobTags::getAll('all');
+        $data['job_tags'] = JobTags::getAll();
         $data['page'] = __('message.job');
         $data['menu'] = 'jobs';
         return view('admin.jobs.create-or-edit', $data);
