@@ -557,18 +557,6 @@ function Account() {
     
     this.initDualListBox = function() {
         $('.select2').select2();
-        $('.duallistbox').off();
-        $('.duallistbox').bootstrapDualListbox({
-            nonSelectedListLabel: lang['non_selected'],
-            selectedListLabel: lang['selected'],
-            preserveSelectionOnMove: 'moved',
-        });
-        $('#permissions-multiselect').off();
-        $('#permissions-multiselect').on('change', function() {
-            var ids = JSON.stringify($(this).val());
-            var data = {ids:ids, role_id:$('#job-tags-dropdown').val()};
-            application.post('/admin/roles/update-permissions', data, function (res) {});
-        });
     }
 }
 

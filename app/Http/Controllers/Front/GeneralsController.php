@@ -64,7 +64,11 @@ class GeneralsController extends Controller
             $orderBy = explode(' ', setting('home_jobs_section_sort_order'));
             $orderByCol = issetVal($orderBy, 0, 'jobs.job_id');
             $orderByDir = issetVal($orderBy, 1, 'DESC');
-            $data['jobs'] = FrontJob::getForFront(true, $limit, $orderByCol, $orderByDir);
+            if ( candidateSession() ) {
+                $data['jobs'] = FrontJob::getForFrontwithCandidate(true, candidateSession(), $limit, $orderByCol, $orderByDir);
+            }else{
+                $data['jobs'] = FrontJob::getForFront(true, $limit, $orderByCol, $orderByDir);
+            }
             $data['favorites'] = FrontJob::getFavorites();
         }
         if (setting('home_candidates_section') == 'enabled') {

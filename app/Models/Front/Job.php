@@ -307,6 +307,61 @@ class Job extends Model
         return Self::sorted($results);
     }
 
+    public static function getForFrontwithCandidate($status = true, $candidate_id, $limit, $orderByCol, $orderByDir)
+    {
+        $query = Self::whereNotNull('jobs.job_id');
+        $query->select(
+            'jobs.*',
+            'departments.title as department',
+            'employers.company', 
+            'employers.slug as employer_slug', 
+            'employers.image as employer_image',
+            'employers.logo as employer_logo',
+            'memberships.separate_site',
+            DB::Raw('COUNT(DISTINCT('.dbprfx().'job_quizes.job_quiz_id)) as quizes_count'),
+            DB::Raw('COUNT(DISTINCT('.dbprfx().'job_traites.job_traite_id)) as traites_count'),
+            DB::Raw('GROUP_CONCAT(DISTINCT(CONCAT('.dbprfx().'job_filter_values.job_filter_value_id, "(--)", '.dbprfx().'job_filter_values.title)) SEPARATOR "-=-++-=-") as job_filter_values'),
+            DB::Raw('GROUP_CONCAT(DISTINCT(CONCAT('.dbprfx().'job_filters.job_filter_id, "(--)", '.dbprfx().'job_filters.title, "(--)", '.dbprfx().'job_filters.icon)) SEPARATOR "-=-++-=-") as job_filter_titles'),
+            DB::Raw('GROUP_CONCAT(DISTINCT(CONCAT('.dbprfx().'job_filter_value_assignments.job_filter_id, "-", '.dbprfx().'job_filter_value_assignments.job_filter_value_id))) AS combined') 
+        );
+        $query->where(function($q) {
+            $q->where('jobs.last_date', '>=', \DB::raw('NOW()'))->orWhere('jobs.hide_job_after_last_date', 0);
+        });        
+        if ($status) {
+            $query->where('jobs.status', 1);
+        }
+        
+        if (setting('display_jobs_front') == 'employers_without_separate_site' && env('CFSAAS_DEMO') == false) {
+            $query->where('memberships.separate_site', 0);
+        }
+        $query->leftJoin('employers', 'employers.employer_id', '=', 'jobs.employer_id');
+        $query->leftJoin('departments', 'departments.department_id', '=', 'jobs.department_id');
+        $query->leftJoin('job_traites', 'job_traites.job_id', '=', 'jobs.job_id');
+        $query->leftJoin('job_quizes', 'job_quizes.job_id', '=', 'jobs.job_id');
+        $query->leftJoin('job_filter_value_assignments', 'job_filter_value_assignments.job_id', '=', 'jobs.job_id');
+        $query->leftJoin('job_filter_values', 'job_filter_values.job_filter_value_id', '=', 'job_filter_value_assignments.job_filter_value_id');
+        $query->leftJoin('job_filters', 'job_filters.job_filter_id', '=', 'job_filter_values.job_filter_id');
+        $query->leftJoin('memberships', function($join) {
+            $join->on('memberships.employer_id', '=', 'employers.employer_id');
+            $join->where('memberships.status', '=', '1');
+            $join->where('memberships.expiry', '>', \DB::raw('NOW()'));
+        });
+        if (isset($candidate_id) && $candidate_id != '' && $candidate_id > 0) {
+            $query->join('user_job_tags', 'user_job_tags.job_id', '=', 'jobs.job_id');
+            $query->join('candidate_job_tags', 'candidate_job_tags.job_tags_id', '=', 'user_job_tags.job_tags_id');
+            $query->where('candidate_job_tags.candidate_id', $candidate_id);
+        }
+        if ($orderByCol) {
+            $query->orderBy($orderByCol, $orderByDir);
+        }        
+        $query->groupBy('jobs.job_id');
+        $query->offset(0);
+        $query->limit($limit);
+        $result = $query->get();
+        $results = $result ? objToArr($result->toArray()) : array();
+        return Self::sorted($results);
+    }
+
     public static function getAppliedJobs()
     {
         $query = DB::table('job_applications')->whereNotNull('job_applications.job_application_id');
