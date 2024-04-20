@@ -552,7 +552,24 @@ function Account() {
 
     this.openInNewTab = function (url) {
         var win = window.open(url, '_blank');
-    }    
+    }   
+    
+    
+    this.initDualListBox = function() {
+        $('.select2').select2();
+        $('.duallistbox').off();
+        $('.duallistbox').bootstrapDualListbox({
+            nonSelectedListLabel: lang['non_selected'],
+            selectedListLabel: lang['selected'],
+            preserveSelectionOnMove: 'moved',
+        });
+        $('#permissions-multiselect').off();
+        $('#permissions-multiselect').on('change', function() {
+            var ids = JSON.stringify($(this).val());
+            var data = {ids:ids, role_id:$('#job-tags-dropdown').val()};
+            application.post('/admin/roles/update-permissions', data, function (res) {});
+        });
+    }
 }
 
 $(document).ready(function() {
@@ -586,5 +603,6 @@ $(document).ready(function() {
     account.initDefaultFieldForResumeSections();    
     account.initJobApply();    
     account.initQuizTimer();    
-    account.initMembershipRenewForm();    
+    account.initMembershipRenewForm();   
+    account.initDualListBox(); 
 });
